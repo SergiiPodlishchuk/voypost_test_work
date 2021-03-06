@@ -5,7 +5,19 @@ import { ReactComponent as FileIcon } from "../icons/fileIcon.svg";
 import { Grid } from "@material-ui/core";
 import ChipsInput from "./ChipsInput";
 
-const Files = ({ files, setFiles, handleChipClick }) => {
+import useStyles from './components/styles/styles'
+
+const classes = useStyles()
+
+const Files = ({ files, handleDeleteChips}) => {
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [currentAttachmentIndex, setCurrentAttachmentIndex] = useState(0);
+
+  const handleChipClick = (attachmentIndex: number) => {
+    setCurrentAttachmentIndex(attachmentIndex);
+    setPreviewOpen(true);
+  };
+
   return (
     <>
       <Grid item xs={12}>
@@ -17,10 +29,7 @@ const Files = ({ files, setFiles, handleChipClick }) => {
           onClick={handleChipClick}
           value={files.map((attachment) => attachment?.name || "") || []}
           icon={<FileIcon width={13} height={13} />}
-          onDeleteChip={(index) =>
-            setFiles([...files.slice(0, index), ...files.slice(index + 1)])
-          }
-        />
+          onDeleteChip={(index) => handleDeleteChips(index)}/>
         {files ? (
           <PdfPreview
             open={previewOpen}

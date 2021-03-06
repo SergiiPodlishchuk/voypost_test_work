@@ -4,6 +4,10 @@ import { TextField, Grid } from "@material-ui/core";
 
 import Daterow from "./components/DateRow/Daterow";
 
+import useStyles from "./components/styles/styles";
+
+const classes = useStyles();
+
 const Header = ({ dispatch, eventForm }) => {
   return (
     <>

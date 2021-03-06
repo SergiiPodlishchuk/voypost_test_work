@@ -2,6 +2,10 @@ import React from "react";
 
 import { Grid, CircularProgress, Button } from "@material-ui/core";
 
+import useStyles from "./components/styles/styles";
+
+const classes = useStyles();
+
 const Actions = ({ updateLoading, createLoading, handleOpen }) => {
   return (
     <>

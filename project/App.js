@@ -42,14 +42,13 @@ import convertMStoTimeLeft from "../common/convertMSToTimeLeft";
 import { gql } from "@apollo/client";
 
 import TextField from "./TextField";
-import ChipsInput from "./ChipsInput";
 
 import { Link } from "react-router-dom";
 import EventDeleteModal from "./EventDeleteModal";
 
 // ===========================================================================
-import useStyles from './components/styles/styles'
-import reducer from './components/reducer/reducer'
+import useStyles from './styles/styles'
+import reducer from './reducer/reducer'
 import Snackbar from './components/Snackbar/Snackbar'
 
 
@@ -223,8 +222,6 @@ const EventDetails = ({
     ).format("l"),
     notifications: notifications,
   };
-
-// const reducer
 
   const [eventForm, dispatch] = useReducer(reducer, initialEventForm);
 
@@ -413,8 +410,7 @@ const EventDetails = ({
   };
 
   
-  const [previewOpen, setPreviewOpen] = useState(false);
-  const [currentAttachmentIndex, setCurrentAttachmentIndex] = useState(0);
+
 
   useEffect(() => {
     if (updateEventData && !updateError) {
@@ -541,13 +537,14 @@ const EventDetails = ({
     }
   };
 
-  const handleChipClick = (attachmentIndex: number) => {
-    setCurrentAttachmentIndex(attachmentIndex);
-    setPreviewOpen(true);
-  };
+
 
   const handleClose = () => setIsOpenModalConfirm(false);
   const handleOpen = () => setIsOpenModalConfirm(true)
+
+  const handleOpenLink = () => setOpen(false)
+
+  const handleDeleteChips = (index) => setFiles([...files.slice(0, index), ...files.slice(index + 1)])
 
   const link = createLink(
     currentUser.email,
@@ -629,44 +626,7 @@ const EventDetails = ({
                     }
                   />
                 </Grid>
-                <Grid item xs={12}>
-                  <Grid container spacing={2} alignItems="flex-end">
-                    <Grid item xs={6}>
-                      <Link className={classes.linkStyles} to={link}>
-                        <TextField
-                          onClick={() => setOpen(false)}
-                          fullWidth
-                          size="small"
-                          variant="outlined"
-                          label="Mail"
-                          InputProps={{
-                            className: classes.multilineColor,
-                          }}
-                          value={
-                            messageTitle ||
-                            message?.caseStyle ||
-                            message?.subject ||
-                            event?.message?.caseStyle ||
-                            ""
-                          }
-                        />
-                      </Link>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <ChipsInput
-                        value={
-                          event?.message?.tags?.map((tag) => tag.name) ||
-                          message?.tags.map((tag) => tag.name) ||
-                          []
-                        }
-                        label="Category:"
-                        isLineType
-                        borderType="square"
-                        withBorder
-                      />
-                    </Grid>
-                  </Grid>
-                </Grid>
+               <Link link={link} handleOpenLink={handleOpenLink} messageTitle={messageTitle} message={message} event={event} />
                 {eventForm.notifications.map(
                   (notify: NotificationItem, index: number) => (
                     <Notifications notify={notify} index={index} dispatch={dispatch} sharingUsers={sharingUsers}/>
@@ -685,7 +645,7 @@ const EventDetails = ({
                     Add Reminder
                   </Button>
                 </Grid>
-                {files ? (<Files files={files} setFiles={setFiles} handleChipClick={handleChipClick}/>) : null}
+                {files ? (<Files files={files} handleDeleteChips={handleDeleteChips} />) : null}
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
